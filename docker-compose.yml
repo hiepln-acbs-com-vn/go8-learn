@@ -1,0 +1,33 @@
+version: '3.4'
+
+services:
+
+  server:
+    image: "go8/server"
+    container_name: "go8_container"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: ["/App/server"]
+    ports:
+      - ${API_PORT}:${API_PORT}
+
+  postgres:
+    image: "postgres:15"
+    restart: always
+    container_name: "go8_postgres"
+    healthcheck:
+      test: pg_isready -U ${DB_USER}
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - ${DB_PORT}:5432
+    expose:
+      - "5432"
+    volumes:
+      - postgres15go8db:/var/lib/postgresql/data
+
+volumes:
+  postgres14go8db:
