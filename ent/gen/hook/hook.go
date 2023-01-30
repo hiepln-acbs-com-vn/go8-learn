@@ -9,6 +9,19 @@ import (
 	"github.com/gmhafiz/go8/ent/gen"
 )
 
+// The AccountFunc type is an adapter to allow the use of ordinary
+// function as Account mutator.
+type AccountFunc func(context.Context, *gen.AccountMutation) (gen.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AccountFunc) Mutate(ctx context.Context, m gen.Mutation) (gen.Value, error) {
+	mv, ok := m.(*gen.AccountMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *gen.AccountMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The AuthorFunc type is an adapter to allow the use of ordinary
 // function as Author mutator.
 type AuthorFunc func(context.Context, *gen.AuthorMutation) (gen.Value, error)
@@ -31,6 +44,19 @@ func (f BookFunc) Mutate(ctx context.Context, m gen.Mutation) (gen.Value, error)
 	mv, ok := m.(*gen.BookMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *gen.BookMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The EkycFunc type is an adapter to allow the use of ordinary
+// function as Ekyc mutator.
+type EkycFunc func(context.Context, *gen.EkycMutation) (gen.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f EkycFunc) Mutate(ctx context.Context, m gen.Mutation) (gen.Value, error) {
+	mv, ok := m.(*gen.EkycMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *gen.EkycMutation", m)
 	}
 	return f(ctx, mv)
 }

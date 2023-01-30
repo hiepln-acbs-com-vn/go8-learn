@@ -5,6 +5,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
+	accountHandler "github.com/gmhafiz/go8/internal/domain/account/handler"
+	accountRepo "github.com/gmhafiz/go8/internal/domain/account/repository"
+	accountUseCase "github.com/gmhafiz/go8/internal/domain/account/usecase"
 	authorHandler "github.com/gmhafiz/go8/internal/domain/author/handler"
 	authorRepo "github.com/gmhafiz/go8/internal/domain/author/repository"
 	authorUseCase "github.com/gmhafiz/go8/internal/domain/author/usecase"
@@ -17,9 +20,10 @@ import (
 )
 
 type Domain struct {
-	Health *health.Handler
-	Book   *bookHandler.Handler
-	Author *authorHandler.Handler
+	Health  *health.Handler
+	Book    *bookHandler.Handler
+	Author  *authorHandler.Handler
+	Account *accountHandler.Handler
 }
 
 func (s *Server) InitDomains() {
@@ -28,6 +32,7 @@ func (s *Server) InitDomains() {
 	s.initAuthor()
 	s.initHealth()
 	s.initBook()
+	s.initAccount()
 }
 
 func (s *Server) initVersion() {
@@ -78,4 +83,13 @@ func (s *Server) initAuthor() {
 		newRedisCache,
 	)
 	s.Domain.Author = authorHandler.RegisterHTTPEndPoints(s.router, s.validator, newAuthorUseCase)
+}
+
+func (s *Server) initAccount() {
+	newAccountRepo := accountRepo.New(s.ent)
+	newAccountUseCase := accountUseCase.New(
+		s.cfg.Cache,
+		newAccountRepo,
+	)
+	s.Domain.Account = accountHandler.RegisterHTTPEndPoints(s.router, s.validator, newAccountUseCase)
 }

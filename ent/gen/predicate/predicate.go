@@ -6,8 +6,14 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// Account is the predicate function for account builders.
+type Account func(*sql.Selector)
+
 // Author is the predicate function for author builders.
 type Author func(*sql.Selector)
 
 // Book is the predicate function for book builders.
 type Book func(*sql.Selector)
+
+// Ekyc is the predicate function for ekyc builders.
+type Ekyc func(*sql.Selector)
